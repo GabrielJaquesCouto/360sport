@@ -103,20 +103,20 @@ services:
       - COUCHDB_USER=${COUCH_DB_USER}
       - TARGETBUILD=docker-compose
     volumes:
-      - couchdb3_data:/opt/couchdb/data
+      - /dir/workspace/360sport/couchdb3_data:/opt/couchdb/data
 
   redis-service:
     restart: unless-stopped
     image: redis
     command: redis-server --requirepass "${REDIS_PASSWORD}"
     volumes:
-      - redis_data:/data
+      - /dir/workspace/360sport/redis_data:/data
 
   watchtower-service:
     restart: always
     image: containrrr/watchtower
     volumes:
-      - /workspace/360sport/database
+      - /dir/workspace/360sport/var/run/docker.sock:/var/run/docker.sock
       #/var/run/docker.sock:/var/run/docker.sock
     command: --debug --http-api-update bbapps bbworker bbproxy
     environment:

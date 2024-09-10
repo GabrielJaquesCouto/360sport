@@ -1,0 +1,112 @@
+CREATE TABLE "arenas" (
+  "arena_id" integer,
+  "arena_nome" varchar,
+  "arena_email" varchar,
+  "arena_senha" varchar
+);
+
+CREATE TABLE "recursos" (
+  "recurso_id" integer,
+  "arena_id" integer,
+  "recurso_tipo" char,
+  "recurso_camera" char
+);
+
+CREATE TABLE "funcionarios" (
+  "funcionario_id" integer,
+  "arena_id" integer,
+  "funcionario_tipo" char,
+  "funcionario_email" char,
+  "funcionario_senha" varchar
+);
+
+CREATE TABLE "clientes" (
+  "cliente_id" integer,
+  "cliente_nome" varchar,
+  "cliente_email" varchar,
+  "cliente_senha" varchar
+);
+
+CREATE TABLE "reservas" (
+  "reserva_id" integer,
+  "reserva_data" timestamp,
+  "recurso_id" integer,
+  "cliente_id" integer
+);
+
+CREATE TABLE "gravacoes" (
+  "gravacao_id" integer,
+  "gravacao_l_salvo" varchar,
+  "camera_id" integer
+);
+
+CREATE TABLE "endereco_arena" (
+  "end_arena_id" integer,
+  "arena_id" integer,
+  "logradouro" varchar,
+  "bairro" varchar,
+  "municipio" varchar,
+  "cep" integer,
+  "complemento" varchar
+);
+
+CREATE TABLE "vendas" (
+  "venda_id" integer,
+  "cliente_id" integer,
+  "gravacao_id" integer,
+  "venda_tipo" varchar,
+  "venda_status" varchar
+);
+
+CREATE TABLE "cameras" (
+  "camera_id" integer,
+  "arena_id" integer,
+  "recurso_id" integer
+);
+
+ALTER TABLE "arenas" ADD FOREIGN KEY ("arena_id") REFERENCES "recursos" ("arena_id");
+
+ALTER TABLE "funcionarios" ADD FOREIGN KEY ("arena_id") REFERENCES "arenas" ("arena_id");
+
+CREATE TABLE "recursos_reservas" (
+  "recursos_recurso_id" integer,
+  "reservas_recurso_id" integer,
+  PRIMARY KEY ("recursos_recurso_id", "reservas_recurso_id")
+);
+
+ALTER TABLE "recursos_reservas" ADD FOREIGN KEY ("recursos_recurso_id") REFERENCES "recursos" ("recurso_id");
+
+ALTER TABLE "recursos_reservas" ADD FOREIGN KEY ("reservas_recurso_id") REFERENCES "reservas" ("recurso_id");
+
+
+CREATE TABLE "clientes_reservas" (
+  "clientes_cliente_id" integer,
+  "reservas_cliente_id" integer,
+  PRIMARY KEY ("clientes_cliente_id", "reservas_cliente_id")
+);
+
+ALTER TABLE "clientes_reservas" ADD FOREIGN KEY ("clientes_cliente_id") REFERENCES "clientes" ("cliente_id");
+
+ALTER TABLE "clientes_reservas" ADD FOREIGN KEY ("reservas_cliente_id") REFERENCES "reservas" ("cliente_id");
+
+
+ALTER TABLE "arenas" ADD FOREIGN KEY ("arena_id") REFERENCES "endereco_arena" ("arena_id");
+
+ALTER TABLE "clientes" ADD FOREIGN KEY ("cliente_id") REFERENCES "vendas" ("cliente_id");
+
+ALTER TABLE "gravacoes" ADD FOREIGN KEY ("gravacao_id") REFERENCES "vendas" ("gravacao_id");
+
+ALTER TABLE "arenas" ADD FOREIGN KEY ("arena_id") REFERENCES "cameras" ("arena_id");
+
+ALTER TABLE "recursos" ADD FOREIGN KEY ("recurso_id") REFERENCES "cameras" ("recurso_id");
+
+CREATE TABLE "gravacoes_cameras" (
+  "gravacoes_camera_id" integer,
+  "cameras_camera_id" integer,
+  PRIMARY KEY ("gravacoes_camera_id", "cameras_camera_id")
+);
+
+ALTER TABLE "gravacoes_cameras" ADD FOREIGN KEY ("gravacoes_camera_id") REFERENCES "gravacoes" ("camera_id");
+
+ALTER TABLE "gravacoes_cameras" ADD FOREIGN KEY ("cameras_camera_id") REFERENCES "cameras" ("camera_id");
+
